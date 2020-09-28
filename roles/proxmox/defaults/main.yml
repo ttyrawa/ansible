@@ -1,0 +1,16 @@
+---
+# defaults file for proxmox
+pve_interface: "{{ ansible_vmbr0.interfaces }}"
+mgmt_mac: "{{ 'e2:51:ec' | random_mac(seed=ansible_vmbr0.macaddress) }}"
+zfs_arc_max: "{{ansible_memory_mb.real.total // 4 *1048576}}" # 25% of total mem
+zfs_arc_min: 536870912 # 512 MB
+packages:
+  - python-pip
+  - python-dev
+  - build-essential
+
+pip_packages:
+  - pip
+  - virtualenv
+  - proxmoxer
+  - requests

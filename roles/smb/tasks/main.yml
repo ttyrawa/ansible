@@ -1,0 +1,32 @@
+---
+- name: Install cifs
+  apt:
+    name: cifs-utils
+    update_cache: yes
+
+- name: create mount points
+  file: 
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode | default(omit) }}"
+    owner: "{{ item.owner | default(omit) }}"
+    group: "{{ item.group | default(omit) }}"
+  loop: "{{ smb_mounts }}"
+
+- name: create creds file
+  template:
+    src: creds.j2
+    dest: /etc/cifs-utils/.smbcredentials
+    owner: root
+    group: shares
+    mode: '0640'
+
+- name: set up automount
+  mount:
+    state: mounted
+    src: "//{{ item.server }}/{{ item.share}}"
+    path: "{{ item.path }}"
+    fstype: cifs
+    opts: "credentials=/etc/cifs-utils/.smbcredentials,user={{ item.owner }},uid=1001,gid=1001"
+  loop: "{{ smb_mounts }}"
+

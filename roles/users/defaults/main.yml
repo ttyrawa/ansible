@@ -1,0 +1,11 @@
+---
+## Define variables used for user/group lists. 
+#best to place these in group_var/all or similar
+users: []
+
+groups_to_create: []
+  
+users_to_delete: []
+
+default_user_group: users
+default_user_shell: /bin/bash

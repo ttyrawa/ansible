@@ -1,0 +1,17 @@
+---
+smb_mounts:
+  - share:
+    path:
+    server: 
+    mode: 
+    owner: 
+    group: 
+
+smb_creds:
+  - name:
+    password:
+
+default_smb_mounts_server: nas
+default_smb_mounts_mode: 0770
+default_smb_mounts_owner: ttyrawa
+default_smb_mounts_group: shares

@@ -1,0 +1,38 @@
+---
+# tasks file for proxmox
+- import_tasks: 
+    - repos.yml
+    - install_packages.yml
+- name: copy network config
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+
+- name: set subuid/subgid
+  lineinfile:
+    path: "{{item}}"
+    line: root:1001:1
+  loop:
+    - /etc/subuid
+    - /etc/subgid
+
+- name: set zfs prefeances
+  blockinfile:
+      path: /etc/modprobe.d/zfs.conf
+      create: yes
+      state: present
+      block: |
+        options zfs zfs_arc_min={{zfs_arc_min}}
+        options zfs zfs_arc_max={{zfs_arc_max}}
+  notify: update initramfs  
+
+- name: add pool0 to fstab
+  mount:
+    path: /pool0
+    src: pve3:/
+    state: mounted
+    fstype: nfs
+    opts: proto=tcp,nfsvers=4,port=2049

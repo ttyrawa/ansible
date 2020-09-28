@@ -1,0 +1,30 @@
+- name: install packages on all nodes
+  hosts: pve_nodes
+  gather_facts: false
+  vars:
+    packages:
+      - python-pip
+      - python-dev
+      - build-essential
+    pip_packages:
+      - pip
+      - virtualenv
+      - proxmoxer
+      - requests
+
+  tasks:
+  - name: update packages
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+  - name: 'install python-apt so native apt plugins work'
+    package:
+      name: 'python-apt'
+      state: 'present'
+  - name: install packages 
+    apt:
+      name: "{{ packages }}"
+  - name: install/update pip packages
+    pip:
+        name: "{{ pip_packages }}"
+        executable: pip

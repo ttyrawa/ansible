@@ -1,0 +1,19 @@
+---
+- name: remove small primes from DH
+  import_tasks: remove_small_prime.yml
+
+- name: Generate new host keys
+  include_tasks: generate_host_keys.yml
+  when: replace_host_keys|bool == true
+  
+- name: Change sshd_config
+  template:
+    src: "sshd_config.j2"
+    dest: "/etc/ssh/sshd_config"
+    owner: root
+    group: root
+    mode: 0600
+    validate: /usr/sbin/sshd -t -f %s
+  notify: restart sshd
+
+  

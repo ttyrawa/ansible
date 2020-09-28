@@ -1,0 +1,23 @@
+---
+- hosts: pve_nodes
+  gather_facts: false
+
+  tasks:
+    - name: "Ensure source.list containes correct repos"
+      lineinfile:
+        path: /etc/apt/sources.list
+        line: "{{ item }}"
+        state: present
+      check_mode: yes
+      register: presence
+      failed_when: presence is changed
+      loop:
+        - "deb http://deb.debian.org/debian buster main contrib"
+        - "deb http://deb.debian.org/debian buster-updates main contrib"
+        - "deb http://security.debian.org buster/updates main contrib"
+    
+    - name: "run repo update"
+      apt:
+        update_cache: yes
+        upgrade: dist
+      

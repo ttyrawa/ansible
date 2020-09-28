@@ -1,0 +1,18 @@
+---
+tasks:
+  - name: update packages
+    apt:
+      update_cache: yes
+      cache_valid_time:3600
+  - name: 'install python-apt so native apt plugins work'
+      package:
+        name: 'python-apt'
+        state: 'present'
+  - name: install packages from role defaults
+    apt:
+      name: "{{ packages }}"
+  - name: update pip
+    pip:
+        name: "{{ pip_packages }}"
+        state: latest
+        executable: pip

@@ -1,0 +1,20 @@
+auto lo
+iface lo inet loopback
+
+allow-vmbr0 {{ pve_interface | join( ' ' ) }}
+iface {{ pve_interface | join( ' ' ) }} inet manual
+        ovs_type OVSPort
+        ovs_bridge vmbr0
+
+allow-vmbr0 vlan10
+iface vlan10 inet dhcp
+        ovs_type OVSIntPort
+        ovs_bridge vmbr0
+        ovs_options tag=10 
+        ovs_extra set interface vlan10 mac=\"{{ mgmt_mac }}\"
+
+
+allow-ovs vmbr0
+iface vmbr0 inet manual
+        ovs_type OVSBridge
+        ovs_ports {{ pve_interface | join( ' ' ) }} vlan10

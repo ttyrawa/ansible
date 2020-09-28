@@ -1,0 +1,28 @@
+---
+- name: Manage Groups
+  include_tasks: groups.yml
+  when:
+    - (groups_to_delete is defined) or (groups_to_create is defined)
+
+- name: Manage Users
+  include_tasks: users.yml
+  loop: "{{ users|default(omit)}}"
+  loop_control:
+    label: "{{ user.name }}"
+    loop_var: user
+  when: user | length
+
+- name: Delete users
+  user:
+    name: "{{user.name}}"
+    state: absent
+    #default no, will not remove dir for user
+    remove: "{{ user.remove | default(omit)}}"
+    #default no
+    force: "{{ user.force )}}"
+  loop: "{{ users_to_delete }}"
+  loop_control:
+    label: "{{ user.name }}"
+    loop_var: user
+  when: users_to_delete | length
+

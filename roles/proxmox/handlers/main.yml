@@ -1,0 +1,8 @@
+---
+# handlers file for proxmox
+- name: restart pveproxy
+  service:
+    name: pveproxy
+    state: restarted
+- name: update initramfs
+  shell: update-initramfs -u

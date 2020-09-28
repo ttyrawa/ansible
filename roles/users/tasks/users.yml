@@ -1,0 +1,38 @@
+---
+- name: "Define user {{ user.name }}"
+  user:
+    name: "{{user.name}}"
+    uid: "{{user.uid | default(omit)}}"
+    group: "{{user.group | default(default_user_group)}}"
+    #default will remove all groups except user.group
+    groups: "{{user.groups | default(omit)}}" 
+    #append default no
+    append: "{{user.append | default(omit)}}"
+    state: "{{ user.state | default('present') }}"
+    #default yes
+    create_home: "{{ user.create_home | default(omit) }}"
+    home: "{{ user.home | default(omit) }}"
+    move_home: "{{ user.move_home if user.home is defined else omit }}"
+    update_password: "{{ user.update_password | default('on_create') }}" 
+    password: "{{ password | string | password_hash('sha512', 65534 | random(seed=inventory_hostname)) if password is defined else omit}}"
+    shell: "{{ user.shell | default(default_user_shell) }}"
+    expiers: "{{ user.expiers | default(omit) }}"
+    #default no
+    generate_ssh_key: "{{ user.generate_ssh_key | default(omit) }}"
+    #default no, will not overwrite existing 
+    force: "{{ user.force | default(omit)}}"
+    ssh_key_type: "{{ user.ssh_key_type | default('ed25519', true) if user.generate_ssh_key is sameas true else omit }}"
+    ssh_key_bits: "{{ user.ssh_key_bits | default(omit) }}"
+    ssh_key_comment: "{{ user.ssh_key_comment | default(ansible_env.USER + '@' + ansible_facts.nodename, true) if user.generate_ssh_key is sameas true else omit }}"
+    ssh_key_file: "{{ user.ssh_key_file | default(omit) }}"
+    ssh_key_passphrase: "{{ user.ssh_key_passphrase | default(omit)}}"
+  tags: users
+  
+- name: "Add authorized keys for {{ user.name }}"
+  authorized_key:
+    user: "{{ user.name }}"
+    state: present
+    key: "{{ item }}"
+  loop: "{{ user.auth_keys }}"
+  tags: auth_keys
+  ignore_errors: yes

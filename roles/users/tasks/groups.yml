@@ -1,0 +1,22 @@
+---
+- name: Delete Groups
+  group: 
+    name: "{{group.name}}" 
+    gid: "{{group.gid | default(omit)}}"
+    state: absent
+  loop: "{{ groups_to_delete|default([]) }}"
+  loop_control:
+    label: "{{ group.name }}"
+    loop_var: group
+  when: group | length
+
+- name: Create Groups
+  group: 
+    name: "{{group.name}}" 
+    gid: "{{group.gid | default(omit)}}"
+    state: present
+  loop: "{{ groups_to_create|default([]) }}"
+  loop_control:
+    label: "{{ group.name }}"
+    loop_var: group
+  when: group | length

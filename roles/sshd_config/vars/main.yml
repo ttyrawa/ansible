@@ -1,0 +1,4 @@
+---
+# vars file for sshd_config
+sshd_allowed_users: root ttyrawa ansible
+sshd_moduli_minimum: 3071

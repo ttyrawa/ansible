@@ -1,0 +1,12 @@
+---
+smb_mounts:
+  - share: pool0
+    path: /mnt/pool0
+    server: nas
+    owner: ttyrawa
+    group: shares
+    mode: u=rwx,g=rwx,o-rwx
+
+smb_creds:
+  - name: ttyrawra
+    password: "{{ vault_ttyrawa_password }}"

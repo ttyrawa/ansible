@@ -1,0 +1,24 @@
+---
+- name: find all host key files
+  find:
+    path: /etc/ssh/
+    patterns: ssh_host*
+  register: host_keys_to_delete
+
+- name: delete host keys
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ host_keys_to_delete.files }}"
+
+- name: generate new host keys
+  openssh_keypair:
+    path: "{{ item.path }}"
+    type: "{{ item.type }}"
+    size: 4096
+    force: true
+    comment: "{{ ansible_env.USER }}@{{ ansible_facts.nodename }}"
+  loop:
+    - { path: '/etc/ssh/ssh_host_rsa_key', type: 'rsa' }
+    - { path: '/etc/ssh/ssh_host_ed25519_key', type: 'ed25519' }
+  register: new_host_keys

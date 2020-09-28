@@ -1,0 +1,13 @@
+---
+- hosts: pve_nodes
+  vars:
+    replace_host_keys: yes
+  roles:
+    - sshd_config
+  tasks:  
+    - name: add new key to authorized hosts in cluster flie system
+      lineinfile:
+        state: present
+        path: /etc/pve/priv/authorized_keys
+        regex: '^.*{{ newkey.comment }}'
+        line: "{{ new_host_keys.public_key }} {{ new_host_keys.comment }}"

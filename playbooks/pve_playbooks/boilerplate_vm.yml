@@ -1,0 +1,34 @@
+---
+- hosts: ubuntu-temp
+  gather_facts: false
+  remote_user: ttyrawa
+  become: true
+  vars:
+    
+    
+  tasks:
+    - name: start new vm
+      proxmox_kvm:
+          api_host: pve1
+          api_user: "{{ api_user }}"
+          api_password: "{{ api_password }}"
+          name: "{{ item.name }}"
+          state: started
+      delegate_to: localhost
+
+
+    - name: register old machine-id
+      command: cat /etc/machine-id
+      register: oldMID
+
+    - name: Run boilerplate.sh to change machine-id and hostname
+      command: /root/boilerplate.sh {{ item.name }}
+
+    - name: reigster new machine-id
+      command: cat /etc/machine-id
+      register: newMID
+
+    - name: notify if machine-id is not changed
+      debug: 
+        msg: "Machine ID did not change"
+      when: oldMID == newMID

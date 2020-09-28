@@ -1,0 +1,85 @@
+acceptenv LANG
+acceptenv LC_*
+addressfamily inet
+allowagentforwarding yes
+allowstreamlocalforwarding yes
+allowtcpforwarding yes
+allowusers {{ sshd_allowed_users }}
+authenticationmethods {{ sshd_auth_methods }}
+authorizedkeyscommand none
+authorizedkeyscommanduser none
+authorizedkeysfile .ssh/authorized_keys .ssh/authorized_keys2
+authorizedprincipalscommand none
+authorizedprincipalscommanduser none
+authorizedprincipalsfile none
+banner none
+casignaturealgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+challengeresponseauthentication no
+chrootdirectory none
+ciphers {{ sshd_ciphers }}
+clientalivecountmax 2
+clientaliveinterval 300
+compression yes
+disableforwarding no
+exposeauthinfo no
+fingerprinthash SHA256
+forcecommand none
+gatewayports no
+gssapiauthentication no
+gssapicleanupcredentials yes
+gssapikeyexchange no
+gssapistorecredentialsonrekey no
+gssapistrictacceptorcheck yes
+hostbasedacceptedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,rsa-sha2-512,rsa-sha2-256
+hostbasedauthentication no
+hostbasedusesnamefrompacketonly no
+hostkey /etc/ssh/ssh_host_ed25519_key
+hostkey /etc/ssh/ssh_host_rsa_key
+hostkeyagent none
+hostkeyalgorithms {{ sshd_hostkeyalgorithms }} 
+ignorerhosts yes
+ignoreuserknownhosts no
+ipqos lowdelay throughput
+kbdinteractiveauthentication no
+kerberosauthentication no
+kerberosorlocalpasswd yes
+kerberosticketcleanup yes
+kexalgorithms {{ sshd_kexalgorithms }}
+listenaddress {{ sshd_listen_address }}
+logingracetime 10
+loglevel VERBOSE
+macs {{ sshd_macs }}
+maxauthtries 2
+maxsessions 10
+maxstartups 3:30:3
+passwordauthentication no
+permitemptypasswords no
+permitlisten any
+permitopen any
+permitrootlogin {{ sshd_permit_root_login }}
+permittty yes
+permittunnel no
+permituserenvironment no
+permituserrc yes
+pidfile /run/sshd.pid
+port 22
+printlastlog yes
+printmotd no
+pubkeyacceptedkeytypes {{ sshd_pubkeyacceptedkeytypes }}
+pubkeyauthentication yes
+rdomain none
+rekeylimit 4G 1h
+revokedkeys none
+streamlocalbindmask 0177
+streamlocalbindunlink no
+strictmodes yes
+syslogfacility AUTH
+tcpkeepalive yes
+trustedusercakeys none
+usedns no
+usepam yes
+versionaddendum none
+x11displayoffset 10
+x11forwarding no
+x11uselocalhost yes
+xauthlocation /usr/bin/xauth

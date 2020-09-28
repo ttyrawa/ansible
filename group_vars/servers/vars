@@ -1,0 +1,31 @@
+---
+ansible_user: root
+ansible_ssh_private_key_file: "{{ vault_ssh_key_path}}"
+ansible_python_interpreter: /usr/bin/python3
+#### Variables for users role
+users:
+  - name: ttyrawa
+    uid: 1001
+    groups: 
+      - sudo
+      - ssh
+      - shares
+      - docker
+    append: yes
+    update_password: always
+    password: "{{ vault_ttyrawa_password }}"
+    auth_keys:
+      - "{{ lookup('file', ~/ansible/ssh_keys/pixelbook.pub)}}"
+      - "{{ lookup('file', ~/ansible/ssh_keys/ttyrawa@jump.pub)}}"
+
+  - name: root
+    group: root
+    update_password: always
+    password: "{{ vault_root_password}}"
+    auth_keys:
+      - "{{ lookup('file', ~/ansible/ssh_keys/pixelbook.pub)}}"
+      - "{{ lookup('file', ~/ansible/ssh_keys/ansible@jump.pub)}}"
+
+groups_to_create:
+  - name: shares
+    gid: 1001
